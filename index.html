@@ -69,10 +69,11 @@
                 answer.value = ''
                 try {
                     var limit = parseInt(new URLSearchParams(window.location.search).get('limit') || '10')
+                    
                 } catch {
                     var limit = 10
                 }
-                timer = setTimeout(guess, limit)
+                timer = setTimeout(guess, limit*1000)
             }
             
             
