@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                font-family: sans-serif;
+            }
+            div#guess, div#check {
+                font-size: 3em;
+                text-align: center;
+                margin: .5em;
+            }
+            input {
+                font-size: inherit;
+            }
+        </style>
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    </head>
+    <body onload="document.getElementById('answer').focus()">
+        <div id="score">
+            <span id="right">0</span> / <span id="total">0</span>
+        </div>
+        <div id="check">&nbsp;</div>
+        <div id="guess">
+            <form id="form" onsubmit="event.preventDefault(); guess()">
+                <span id="question"></span>
+                <input id="answer" name="answer" type="number" style="width: 3em" autocomplete="off" />
+            </form>
+        </div>
+        <script>
+            ops = [1, 1, 1, 1]
+            symbols = ['+', '-', 'x', '/']
+            limits = [100, 100, 10, 10]
+            timer = null
+            
+            answer = document.getElementById('answer')
+            check = document.getElementById('check')
+            question = document.getElementById('question')
+            right = document.getElementById('right')
+            total = document.getElementById('total')
+
+
+            function ask() {
+                var op 
+                do
+                    op = Math.floor(Math.random() * 4)
+                while (!ops[op])
+                var a = Math.ceil(Math.random() * limits[op])
+                var b = a + 1
+                while (op%2 && b>a)
+                    b = Math.ceil(Math.random() * limits[op])
+                question.innerHTML = op == 3
+                    ? `${a * b} / ${b}`
+                    : `${a} ${symbols[op]} ${b}`
+                switch (op) {
+                    case 0:
+                        result = a + b
+                        break
+                    case 1:
+                        result = a - b
+                        break
+                    case 2:
+                        result = a * b
+                        break
+                    case 3:
+                        result = a
+                        break
+                }
+                answer.value = ''
+                try {
+                    var limit = parseInt(new URLSearchParams(window.location.search).get('limit') || '10')
+                } catch {
+                    var limit = 10
+                }
+                timer = setTimeout(guess, limit)
+            }
+            
+            
+            function guess() {
+                if (timer)
+                    clearTimeout(timer)
+                var ok = result == parseInt(answer.value)
+                if (ok) {
+                    check.innerHTML = '&#128077;'
+                    right.innerHTML = parseInt(right.innerHTML) + 1
+                } else
+                    check.innerHTML = `&#128078; <span style="color: red">${result}</span>`
+                total.innerHTML = parseInt(total.innerHTML) + 1
+                check.style.visibility = 'visible'
+                setTimeout(() => { 
+                    check.style.visibility = 'hidden'
+                    ask()
+                }, ok ? 1000 : 3000)
+            }
+            
+            ask()
+        </script>
+    </body>
+</html>
